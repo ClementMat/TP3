@@ -140,5 +140,15 @@ def eda(df: pd.DataFrame) -> None:
                 title = f"{col} vs y"
             fig = px.box(df, x="y", y=col, title=title)
             st.plotly_chart(fig, use_container_width=True)
+            
+        # Graphique en barres empilées : Relation entre 'job' et 'y'
+        st.subheader("Relation entre le type d'emploi et la souscription au dépôt à terme")
+        if "job" in df.columns and "y" in df.columns:
+            job_y_counts = df.groupby(["job", "y"]).size().reset_index(name="counts")
+            fig = px.bar(job_y_counts, x="job", y="counts", color="y", 
+                        title="Répartition des souscriptions par type d'emploi",
+                        labels={"counts": "Nombre de souscriptions", "job": "Type d'emploi"},
+                        barmode="stack")
+            st.plotly_chart(fig, use_container_width=True)
 
     logger.info("Analyse exploratoire terminée")
